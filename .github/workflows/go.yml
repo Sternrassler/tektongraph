@@ -2,9 +2,9 @@ name: Go
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    tags:
+      - 'v*'
+  workflow_dispatch:
 
 jobs:
 
@@ -28,7 +28,7 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v4
       with:
-        go-version: '1.23'  # Aktualisieren Sie die Go-Version nach Bedarf
+        go-version: '1.23'  # Passen Sie die Go-Version nach Bedarf an
 
     - name: Extract repository name
       run: echo "REPO_NAME=${GITHUB_REPOSITORY##*/}" >> $GITHUB_ENV
@@ -47,8 +47,9 @@ jobs:
         echo "OUTPUT_FILE=$OUTPUT_FILE" >> $GITHUB_ENV
         GOOS=$GOOS GOARCH=$GOARCH go build -v -o "$OUTPUT_FILE" ./...
 
-    - name: Upload executable
-      uses: actions/upload-artifact@v3
+    - name: Upload Release Assets
+      uses: softprops/action-gh-release@v1
       with:
-        name: "${{ env.REPO_NAME }}_${{ matrix.os_name }}"
-        path: "${{ env.OUTPUT_FILE }}"
+        files: ${{ env.OUTPUT_FILE }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
