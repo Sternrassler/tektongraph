@@ -50,6 +50,8 @@ go build
 
 Dieser Befehl erstellt eine ausführbare Datei in Ihrem aktuellen Verzeichnis. Unter Linux und macOS wird die Datei standardmäßig nach dem Verzeichnis benannt, in dem Sie sich befinden. Unter Windows wird sie `meinprogramm.exe` heißen.
 
+Wenn Sie den letzten Repository-Commit im Format `vX.X.X` taggen, starten auf Github eine Build-Aktion, die das Programm für verschiedene Plattformen kompiliert und die ausführbaren Dateien als Release mit diesem Versions-Tag bereitstellt.
+
 ## Programm ausführen
 
 Führen Sie das Programm mit den erforderlichen Flags aus. Sie müssen mindestens den `-n` Flag für die Namespaces angeben.
