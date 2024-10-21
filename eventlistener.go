@@ -1,7 +1,7 @@
 package main
 
 import (
-	"context"
+	// "context"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -10,8 +10,8 @@ import (
 
 	triggersv1beta1 "github.com/tektoncd/triggers/pkg/apis/triggers/v1beta1"
 	triggersclientset "github.com/tektoncd/triggers/pkg/client/clientset/versioned"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	// metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	// "k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 )
 
 func buildAndVisualizeMermaidForEventListener(eventListener *triggersv1beta1.EventListener, namespace string, _ *triggersclientset.Clientset, outputDir string) error {
@@ -122,50 +122,50 @@ func buildAndVisualizeMermaidForEventListener(eventListener *triggersv1beta1.Eve
 	return nil
 }
 
-func addTriggersToMermaid(mermaidDiagram *strings.Builder, _, namespace string, triggersClient *triggersclientset.Clientset) error {
-	eventListeners, err := triggersClient.TriggersV1beta1().EventListeners(namespace).List(context.Background(), metav1.ListOptions{})
-	if err != nil {
-		return err
-	}
+// func addTriggersToMermaid(mermaidDiagram *strings.Builder, _, namespace string, triggersClient *triggersclientset.Clientset) error {
+// 	eventListeners, err := triggersClient.TriggersV1beta1().EventListeners(namespace).List(context.Background(), metav1.ListOptions{})
+// 	if err != nil {
+// 		return err
+// 	}
 
-	for _, eventListener := range eventListeners.Items {
-		for _, trigger := range eventListener.Spec.Triggers {
-			triggerTemplateName := trigger.Template.Ref
-			if triggerTemplateName == nil || *triggerTemplateName == "" {
-				continue
-			}
-			triggerTemplate, err := triggersClient.TriggersV1beta1().TriggerTemplates(namespace).Get(context.Background(), *triggerTemplateName, metav1.GetOptions{})
-			if err != nil {
-				continue
-			}
-			for _, res := range triggerTemplate.Spec.ResourceTemplates {
-				var unstructuredObj unstructured.Unstructured
-				if err := json.Unmarshal(res.Raw, &unstructuredObj); err != nil {
-					continue
-				}
-				if unstructuredObj.GetKind() == "PipelineRun" {
-					eventListenerNode := fmt.Sprintf("EventListener_%s[EventListener: %s]", eventListener.Name, eventListener.Name)
-					triggerTemplateNode := fmt.Sprintf("TriggerTemplate_%s[TriggerTemplate: %s]", triggerTemplate.Name, triggerTemplate.Name)
-					mermaidDiagram.WriteString(eventListenerNode + ";\n")
-					mermaidDiagram.WriteString(triggerTemplateNode + ";\n")
-					mermaidDiagram.WriteString(fmt.Sprintf("%s --> %s;\n", eventListenerNode, triggerTemplateNode))
+// 	for _, eventListener := range eventListeners.Items {
+// 		for _, trigger := range eventListener.Spec.Triggers {
+// 			triggerTemplateName := trigger.Template.Ref
+// 			if triggerTemplateName == nil || *triggerTemplateName == "" {
+// 				continue
+// 			}
+// 			triggerTemplate, err := triggersClient.TriggersV1beta1().TriggerTemplates(namespace).Get(context.Background(), *triggerTemplateName, metav1.GetOptions{})
+// 			if err != nil {
+// 				continue
+// 			}
+// 			for _, res := range triggerTemplate.Spec.ResourceTemplates {
+// 				var unstructuredObj unstructured.Unstructured
+// 				if err := json.Unmarshal(res.Raw, &unstructuredObj); err != nil {
+// 					continue
+// 				}
+// 				if unstructuredObj.GetKind() == "PipelineRun" {
+// 					eventListenerNode := fmt.Sprintf("EventListener_%s[EventListener: %s]", eventListener.Name, eventListener.Name)
+// 					triggerTemplateNode := fmt.Sprintf("TriggerTemplate_%s[TriggerTemplate: %s]", triggerTemplate.Name, triggerTemplate.Name)
+// 					mermaidDiagram.WriteString(eventListenerNode + ";\n")
+// 					mermaidDiagram.WriteString(triggerTemplateNode + ";\n")
+// 					mermaidDiagram.WriteString(fmt.Sprintf("%s --> %s;\n", eventListenerNode, triggerTemplateNode))
 
-					for _, binding := range trigger.Bindings {
-						triggerBindingName := binding.Ref
-						if triggerBindingName == "" {
-							continue
-						}
-						triggerBindingNode := fmt.Sprintf("TriggerBinding_%s[TriggerBinding: %s]", triggerBindingName, triggerBindingName)
-						mermaidDiagram.WriteString(triggerBindingNode + ";\n")
-						mermaidDiagram.WriteString(fmt.Sprintf("%s --> %s;\n", eventListenerNode, triggerBindingNode))
-						mermaidDiagram.WriteString(fmt.Sprintf("%s --> %s;\n", triggerBindingNode, triggerTemplateNode))
-					}
-				}
-			}
-		}
-	}
-	return nil
-}
+// 					for _, binding := range trigger.Bindings {
+// 						triggerBindingName := binding.Ref
+// 						if triggerBindingName == "" {
+// 							continue
+// 						}
+// 						triggerBindingNode := fmt.Sprintf("TriggerBinding_%s[TriggerBinding: %s]", triggerBindingName, triggerBindingName)
+// 						mermaidDiagram.WriteString(triggerBindingNode + ";\n")
+// 						mermaidDiagram.WriteString(fmt.Sprintf("%s --> %s;\n", eventListenerNode, triggerBindingNode))
+// 						mermaidDiagram.WriteString(fmt.Sprintf("%s --> %s;\n", triggerBindingNode, triggerTemplateNode))
+// 					}
+// 				}
+// 			}
+// 		}
+// 	}
+// 	return nil
+// }
 
 func decodeRawJSON(raw []byte) (string, error) {
 	var decoded interface{}

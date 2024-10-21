@@ -8,10 +8,10 @@ import (
 	"strings"
 
 	pipelinev1 "github.com/tektoncd/pipeline/pkg/apis/pipeline/v1"
-	triggersclientset "github.com/tektoncd/triggers/pkg/client/clientset/versioned"
+	// triggersclientset "github.com/tektoncd/triggers/pkg/client/clientset/versioned"
 )
 
-func buildAndVisualizeMermaidForPipeline(pipeline *pipelinev1.Pipeline, namespace string, triggersClient *triggersclientset.Clientset, outputDir string) error {
+func buildAndVisualizeMermaidForPipeline(pipeline *pipelinev1.Pipeline, namespace string, outputDir string) error {
 	// Dateiname basierend auf dem Pipeline-Namen erstellen
 	fileName := fmt.Sprintf("%s_pipeline_%s.md", namespace, pipeline.Name)
 	filePath := filepath.Join(outputDir, fileName)
@@ -62,11 +62,11 @@ func buildAndVisualizeMermaidForPipeline(pipeline *pipelinev1.Pipeline, namespac
 		}
 	}
 
-	// EventListener, TriggerBinding und TriggerTemplate hinzufügen
-	err = addTriggersToMermaid(&mermaidDiagram, pipeline.Name, namespace, triggersClient)
-	if err != nil {
-		return err
-	}
+	// // EventListener, TriggerBinding und TriggerTemplate hinzufügen
+	// err = addTriggersToMermaid(&mermaidDiagram, pipeline.Name, namespace, triggersClient)
+	// if err != nil {
+	// 	return err
+	// }
 
 	mermaidDiagram.WriteString("```\n")
 

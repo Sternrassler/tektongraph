@@ -37,7 +37,7 @@ func processNamespace(config *rest.Config, namespace string, outputDir string) e
 	}
 
 	for _, pipeline := range pipelines.Items {
-		err := buildAndVisualizeMermaidForPipeline(&pipeline, namespace, triggersClient, outputDir)
+		err := buildAndVisualizeMermaidForPipeline(&pipeline, namespace, outputDir)
 		if err != nil {
 			fmt.Printf("Fehler beim Visualisieren der Pipeline %s in Namespace %s: %v\n", pipeline.Name, namespace, err)
 		}
