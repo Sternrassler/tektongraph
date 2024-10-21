@@ -7,9 +7,13 @@ on:
   workflow_dispatch:
 
 jobs:
-
   build:
     runs-on: ubuntu-latest
+
+    # Berechtigungen für das Job festlegen
+    permissions:
+      contents: write
+
     strategy:
       matrix:
         include:
