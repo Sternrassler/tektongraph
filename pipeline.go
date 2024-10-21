@@ -54,6 +54,12 @@ func buildAndVisualizeMermaidForPipeline(pipeline *pipelinev1.Pipeline, namespac
 				}
 			}
 		}
+
+		// Extrahiere WhenExpressions und füge sie als Markdown-Text hinzu
+		for _, whenExpression := range task.When {
+			// mermaidDiagram.WriteString(fmt.Sprintf("Note over %s: %s\n", taskNode, conditionText))
+			renderCondition(task.Name, whenExpression) // Ausgabe des Traces
+		}
 	}
 
 	// EventListener, TriggerBinding und TriggerTemplate hinzufügen
@@ -72,6 +78,15 @@ func buildAndVisualizeMermaidForPipeline(pipeline *pipelinev1.Pipeline, namespac
 
 	fmt.Printf("Mermaid-Diagramm für Pipeline '%s' wurde in der Datei %s gespeichert.\n", pipeline.Name, filePath)
 	return nil
+}
+
+func renderCondition(taskName string, whenExpression pipelinev1.WhenExpression) {
+	fmt.Printf("\tTask: %s\n", taskName)
+	fmt.Printf("\t\tTrace: When Input: %s\n", whenExpression.Input)
+	fmt.Printf("\t\tTrace: When Operator: %s\n", whenExpression.Operator)
+	for _, value := range whenExpression.Values {
+		fmt.Printf("\t\t\tTrace: When Value: %s\n", value)
+	}
 }
 
 // Extrahiert Task-Referenzen aus einem Parameterwert
